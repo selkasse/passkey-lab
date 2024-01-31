@@ -87,27 +87,51 @@
       </form>
       <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
       <script type="module">
-        //* Detect features, invoke WebAuthn, and enable a conditional UI.
-
         import { $, _fetch, loading, authenticate } from "/client.js";
 
+        new mdc.textField.MDCTextField($(".mdc-text-field"));
+
+        const form = $("#form");
+        form.addEventListener("submit", async (s) => {
+          s.preventDefault();
+          console.log(`in form event listener`);
+
+          const form = new FormData(s.target);
+          const cred = {};
+          form.forEach((v, k) => (cred[k] = v));
+          _fetch(s.target.action, cred)
+            .then((user) => {
+              location.href = "/reauth";
+            })
+            .catch((e) => {
+              loading.stop();
+              console.error(e.message);
+              alert(e);
+            });
+        });
+
+        //* Autofill: Detect features, invoke WebAuthn, and enable a conditional UI.
         if (
           window.PublicKeyCredential &&
           PublicKeyCredential.isConditionalMediationAvailable
         ) {
           try {
+            console.log(`in try block for window.PublicKeyCredential`);
             // Is conditional UI available in this browser?
             const cma =
               await PublicKeyCredential.isConditionalMediationAvailable();
             if (cma) {
+              console.log(`in conditional mediation block`);
               // If conditional UI is available, invoke the authenticate() function.
               const user = await authenticate();
               if (user) {
+                console.log(`user was found with authenticate()`);
                 // Proceed only when authentication succeeds.
                 $("#username").value = user.username;
                 loading.start();
                 location.href = "/home";
               } else {
+                console.log(`user was NOT found with authenticate()`);
                 throw new Error("User not found.");
               }
             }
@@ -121,8 +145,6 @@
             }
           }
         }
-
-        // TODO: Add passkeys to the browser autofill: Detect features, invoke WebAuthn, and enable a conditional UI.
       </script>
     </main>
   </body>

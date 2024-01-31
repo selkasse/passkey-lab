@@ -161,7 +161,7 @@ export async function registerCredential() {
   return await _fetch("/auth/registerResponse", credential);
 }
 
-// TODO: Add an ability to authenticate with a passkey: Create the authenticate() function.
+//* Create the authenticate() function.
 export async function authenticate() {
   //* Obtain the challenge and other options from the server endpoint.
   const options = await _fetch("/auth/signinRequest");

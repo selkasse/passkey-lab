@@ -220,11 +220,9 @@ router.post("/registerRequest", csrfCheck, sessionCheck, async (req, res) => {
     // Generate registration options for WebAuthn create
     const options = generateRegistrationOptions({
       rpName: process.env.RP_NAME,
-      // TODO: if this works, add logic to account for prod/localhost
-      // rpID: process.env.HOSTNAME,
       rpID:
         process.env.ENVIRONMENT === "development"
-          ? undefined
+          ? "localhost"
           : process.env.HOSTNAME,
       userID: user.id,
       userName: user.username,
@@ -249,12 +247,9 @@ router.post("/registerResponse", csrfCheck, sessionCheck, async (req, res) => {
   console.log(`in /registerResponse route`);
   const expectedChallenge = req.session.challenge;
   const expectedOrigin = getOrigin(req.get("User-Agent"));
-  // TODO: if this works, add logic to account for localhost/production
-  // const expectedRPID = process.env.HOSTNAME;
-  // const expectedRPID = undefined;
   const expectedRPID =
     process.env.ENVIRONMENT === "development"
-      ? undefined
+      ? "localhost"
       : process.env.HOSTNAME;
   const response = req.body;
 
@@ -302,7 +297,11 @@ router.post("/registerResponse", csrfCheck, sessionCheck, async (req, res) => {
 router.post("/signinRequest", csrfCheck, async (req, res) => {
   try {
     const options = await generateAuthenticationOptions({
-      rpID: process.env.HOSTNAME,
+      rpID:
+        process.env.ENVIRONMENT === "development"
+          ? "localhost"
+          : process.env.HOSTNAME,
+
       allowCredentials: [],
     });
     req.session.challenge = options.challenge;
@@ -319,7 +318,10 @@ router.post("/signinResponse", csrfCheck, async (req, res) => {
   const response = req.body;
   const expectedChallenge = req.session.challenge;
   const expectedOrigin = getOrigin(req.get("User-Agent"));
-  const expectedRPID = process.env.HOSTNAME;
+  const expectedRPID =
+    process.env.ENVIRONMENT === "development"
+      ? "localhost"
+      : process.env.HOSTNAME;
 
   try {
     // Find the credential stored to the database by the credential ID
