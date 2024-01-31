@@ -162,6 +162,52 @@ export async function registerCredential() {
 }
 
 // TODO: Add an ability to authenticate with a passkey: Create the authenticate() function.
+export async function authenticate() {
+  //* Obtain the challenge and other options from the server endpoint.
+  const options = await _fetch("/auth/signinRequest");
+
+  console.log(`options:`);
+  console.log(options);
+
+  //* Locally verify the user and get a credential.
+
+  //* Base64URL decode the challenge.
+  options.challenge = base64url.decode(options.challenge);
+
+  //* An empty allowCredentials array invokes an account selector by discoverable credentials.
+  options.allowCredentials = [];
+
+  //* Invoke the WebAuthn get() method.
+  const cred = await navigator.credentials.get({
+    publicKey: options,
+
+    // Request a conditional UI.
+    mediation: "conditional",
+  });
+  console.log(`cred:`);
+  console.log(cred);
+
+  //* Verify the credential.
+  const credential = {};
+  credential.id = cred.id;
+  credential.rawId = cred.id; // Pass a Base64URL encoded ID string.
+  credential.type = cred.type;
+
+  //* Base64URL encode some values.
+  const clientDataJSON = base64url.encode(cred.response.clientDataJSON);
+  const authenticatorData = base64url.encode(cred.response.authenticatorData);
+  const signature = base64url.encode(cred.response.signature);
+  const userHandle = base64url.encode(cred.response.userHandle);
+
+  credential.response = {
+    clientDataJSON,
+    authenticatorData,
+    signature,
+    userHandle,
+  };
+
+  return await _fetch(`/auth/signinResponse`, credential);
+}
 
 export async function updateCredential(credId, newName) {
   return _fetch(`/auth/renameKey`, { credId, newName });
