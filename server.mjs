@@ -39,7 +39,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env.ENVIRONMENT === "development" ? false : true,
       sameSite: "none",
     },
   })
@@ -48,11 +48,7 @@ app.use(
 const RP_NAME = "Passkeys Codelab";
 
 app.use((req, res, next) => {
-  if (process.env.PROJECT_DOMAIN) {
-    process.env.HOSTNAME = `${process.env.PROJECT_DOMAIN}.glitch.me`;
-  } else {
-    process.env.HOSTNAME = req.headers.host;
-  }
+  process.env.HOSTNAME = req.headers.host;
   const protocol = /^localhost/.test(process.env.HOSTNAME) ? "http" : "https";
   process.env.ORIGIN = `${protocol}://${process.env.HOSTNAME}`;
   process.env.RP_NAME = RP_NAME;

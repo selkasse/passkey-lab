@@ -222,6 +222,10 @@ router.post("/registerRequest", csrfCheck, sessionCheck, async (req, res) => {
       rpName: process.env.RP_NAME,
       // TODO: if this works, add logic to account for prod/localhost
       // rpID: process.env.HOSTNAME,
+      rpID:
+        process.env.ENVIRONMENT === "development"
+          ? undefined
+          : process.env.HOSTNAME,
       userID: user.id,
       userName: user.username,
       userDisplayName: user.displayName || user.username,
@@ -247,7 +251,11 @@ router.post("/registerResponse", csrfCheck, sessionCheck, async (req, res) => {
   const expectedOrigin = getOrigin(req.get("User-Agent"));
   // TODO: if this works, add logic to account for localhost/production
   // const expectedRPID = process.env.HOSTNAME;
-  const expectedRPID = undefined;
+  // const expectedRPID = undefined;
+  const expectedRPID =
+    process.env.ENVIRONMENT === "development"
+      ? undefined
+      : process.env.HOSTNAME;
   const response = req.body;
 
   try {
