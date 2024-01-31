@@ -89,6 +89,19 @@ export async function registerCredential() {
   //* Obtain the challenge and other options from the server endpoint.
   const options = await _fetch("/auth/registerRequest");
 
+  console.log(`options:`);
+  console.log(options);
+
+  console.log(`options.rp.id`);
+  console.log(options.rp.id);
+
+  // let localhostRpId;
+
+  // if (options.rp.id.includes(`localhost:`)) {
+  //   localhostRpId = options.rp.id;
+  //   options.rp.id = `localhost`;
+  // }
+
   //* Create a credential.
   //* Base64URL decode some values
   options.user.id = base64url.decode(options.user.id);
@@ -106,11 +119,18 @@ export async function registerCredential() {
     requireResidentKey: true,
   };
 
+  console.log(`about to create passkey with WebAuthn API`);
   //* Invoke the WebAuthn create() method
   //? (Native Web API)
   const cred = await navigator.credentials.create({
     publicKey: options,
   });
+
+  //* Set the rp id back to the original after the passkeys has been created
+  // options.rp.id = localhostRpId;
+
+  console.log(`cred:`);
+  console.log(cred);
 
   //* Register the credential to the server endpoint.
   const credential = {};

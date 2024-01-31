@@ -39,7 +39,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "none",
     },
   })
@@ -86,11 +86,8 @@ app.get("/", (req, res) => {
 
 app.get("/reauth", (req, res) => {
   console.log(`in /reauth route`);
-  console.log("req.session:");
-  console.log(req.session);
 
   const username = req.session.username;
-  console.log(`username: ${username}`);
   if (!username) {
     console.log(
       "redirecting to route / due to missing usernmae at req.session.username"

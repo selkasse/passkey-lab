@@ -109,7 +109,6 @@ router.post("/username", async (req, res) => {
       // Set username in the session
       req.session.username = username;
       req.session.save();
-      console.log("saved req.session");
 
       return res.json(user);
     } else {
@@ -221,7 +220,8 @@ router.post("/registerRequest", csrfCheck, sessionCheck, async (req, res) => {
     // Generate registration options for WebAuthn create
     const options = generateRegistrationOptions({
       rpName: process.env.RP_NAME,
-      rpID: process.env.HOSTNAME,
+      // TODO: if this works, add logic to account for prod/localhost
+      // rpID: process.env.HOSTNAME,
       userID: user.id,
       userName: user.username,
       userDisplayName: user.displayName || user.username,
@@ -242,9 +242,12 @@ router.post("/registerRequest", csrfCheck, sessionCheck, async (req, res) => {
 });
 
 router.post("/registerResponse", csrfCheck, sessionCheck, async (req, res) => {
+  console.log(`in /registerResponse route`);
   const expectedChallenge = req.session.challenge;
   const expectedOrigin = getOrigin(req.get("User-Agent"));
-  const expectedRPID = process.env.HOSTNAME;
+  // TODO: if this works, add logic to account for localhost/production
+  // const expectedRPID = process.env.HOSTNAME;
+  const expectedRPID = undefined;
   const response = req.body;
 
   try {
