@@ -10,7 +10,7 @@ I started working through the Google Codelab linked above, but ran into an issue
 
 - running the project locally was causing some errors with the Webauthn code
   - resolved by using `localhost` instead of `localhost:8080` in the Express routes
-- follow the steps in the **Get Started** section below to enable the app to work properly
+- follow the steps in the _Get Started_ section below to enable the app to work properly
 
 ## Get Started
 
