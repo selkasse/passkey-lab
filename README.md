@@ -10,7 +10,7 @@ I started working through the Google Codelab linked above, but ran into an issue
 
 - running the project locally was causing some errors with the Webauthn code
   - resolved by using `localhost` instead of `localhost:8080` in the Express routes
-- follow the steps in the section below to enable the app to work properly
+- follow the steps in the **Get Started** section below to enable the app to work properly
 
 ## Get Started
 
@@ -24,6 +24,22 @@ HOSTNAME=""
 ORIGIN=""
 RP_NAME=""
 ```
+
+- create a `.data` folder in the root of the project
+- add an empty file `db.json.tmp` to the `.data` folder
+
+- `npm start`
+- navigate to http://localhost:8080/
+- create a user by entering any username (no spaces or special characters)
+- press "Next"
+- press "Sign-In" to accept the pre-populated password
+- press the "Create a Passkey" button
+- authenticate with your local device
+- press "Sign Out"
+- back on the home screen, click into the "username" field
+- select "Use a passkey" from the autofill
+- select the username you just registered with
+- authenticate with your local device again to access the passkey
 
 ### License
 
