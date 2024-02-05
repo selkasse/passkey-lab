@@ -17,7 +17,7 @@ I started working through the Google Codelab linked above, but ran into an issue
 - `npm install`
 - create an `.env` file with the following
 
-```
+```json
 PROJECT_NAME="passkeys codelab"
 ENVIRONMENT="development"
 HOSTNAME=""
