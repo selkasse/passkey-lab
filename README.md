@@ -15,7 +15,7 @@ I started working through the Google Codelab linked above, but ran into an issue
 ## Get Started
 
 - `npm install`
-- create an `.env` file with the following
+- create an `.env` file in the root of the project with the following
 
 ```bash
 PROJECT_NAME="passkeys codelab"
